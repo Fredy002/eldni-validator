@@ -164,8 +164,8 @@ export default function Index() {
       <HistoryTable
         data={history}
         columns={columns}
-        itemsPerPage={5}
-        itemsPerPageOptions={[5, 10, 20]}
+        itemsPerPage={20}
+        itemsPerPageOptions={[20, 50, 100]}
       />
     </main>
   );
