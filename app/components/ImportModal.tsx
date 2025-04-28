@@ -59,7 +59,6 @@ export default function ImportModal({ onClose, onImport }: Props) {
             });
 
             setImportedData(persons);
-            onImport(persons);
         } catch (err: unknown) {
             console.error(err);
             const msg =
@@ -118,6 +117,18 @@ export default function ImportModal({ onClose, onImport }: Props) {
                     {importedData && (
                         <div className="mb-4">
                             <HistoryTable history={importedData} />
+                            <div className="mt-4 flex justify-end">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        onImport(importedData);
+                                        onClose();
+                                    }}
+                                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                >
+                                    Agregar datos
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
