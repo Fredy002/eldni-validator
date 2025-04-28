@@ -11,6 +11,17 @@ interface Props {
     onImport: (data: Person[]) => void;
 }
 
+interface Column<T> {
+    header: string;
+    accessor: keyof T;
+}
+
+const columns: Column<Person>[] = [
+    { header: "NOMBRES", accessor: "nombres" },
+    { header: "APELLIDOS", accessor: "apellidoPaterno" },
+    { header: "DNI", accessor: "numeroDocumento" },
+];
+
 export default function ImportModal({ onClose, onImport }: Props) {
     const [error, setError] = useState<string | null>(null);
     const [importedData, setImportedData] = useState<Person[] | null>(null);
@@ -117,7 +128,12 @@ export default function ImportModal({ onClose, onImport }: Props) {
 
                     {importedData && (
                         <div className="mb-4">
-                            <HistoryTable history={importedData} />
+                            <HistoryTable
+                                data={importedData}
+                                columns={columns}
+                                itemsPerPage={5}
+                                itemsPerPageOptions={[5, 10, 15]}
+                            />
                             <div className="mt-4 flex justify-end">
                                 <Button
                                     label="Realizar Búsqueda"

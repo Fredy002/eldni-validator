@@ -13,6 +13,11 @@ import ExportButtons from "~/components/ExportButtons";
 import ImportModal from "~/components/ImportModal";
 import Button from "~/components/shared/ButtonProps";
 
+interface Column<T> {
+  header: string;
+  accessor: keyof T;
+}
+
 export async function loader({ request }: DataFunctionArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q")?.trim();
@@ -106,6 +111,12 @@ export default function Index() {
     },
   ];
 
+  const columns: Column<Person>[] = [
+    { header: "NOMBRES", accessor: "nombres" },
+    { header: "APELLIDOS", accessor: "apellidoPaterno" },
+    { header: "DNI", accessor: "numeroDocumento" },
+  ];
+
   return (
     <main className="p-6">
       <h1 className="text-xl font-semibold mb-4">🔍 Buscar por DNI 🔒</h1>
@@ -150,7 +161,12 @@ export default function Index() {
         />
       )}
 
-      <HistoryTable history={history} />
+      <HistoryTable
+        data={history}
+        columns={columns}
+        itemsPerPage={5}
+        itemsPerPageOptions={[5, 10, 20]}
+      />
     </main>
   );
 }
