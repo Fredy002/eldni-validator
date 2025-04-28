@@ -23,7 +23,7 @@ export default function AlertNotification({ message, type = "error", onClose }: 
         <div
             role="alert"
             className={`
-                fixed top-4 right-4 flex items-start space-x-2
+                fixed top-4 right-4 z-100 flex items-start space-x-2
                 p-4 rounded shadow-lg
                 ${type === "error" ? "bg-red-100 text-red-800" : ""}
                 ${type === "success" ? "bg-green-100 text-green-800" : ""}
