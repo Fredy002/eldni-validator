@@ -7,9 +7,10 @@ import { DniService } from "~/services/dniService";
 import type { Person } from "~/models/person";
 import SearchForm from "~/components/SearchForm";
 import HistoryTable from "~/components/HistoryTable";
-import Notification from "~/components/Notification";
+import Notification from "~/components/shared/Notification";
 import { Messages } from "~/utils/messages";
 import ExportButtons from "~/components/ExportButtons";
+import ImportModal from "~/components/ImportModal";
 
 export async function loader({ request }: DataFunctionArgs) {
   const url = new URL(request.url);
@@ -52,6 +53,7 @@ export default function Index() {
 
   const [clientError, setClientError] = useState<string | null>(null);
   const [serverErrorState, setServerError] = useState<string | null>(serverError ?? null);
+  const [showImport, setShowImport] = useState(false);
 
   useEffect(() => {
     if (!serverErrorState && persons.length === 1) {
@@ -72,6 +74,15 @@ export default function Index() {
       e.preventDefault();
       setClientError(Messages.INVALID_LENGTH);
     }
+  };
+
+  const handleImport = (newData: Person[]) => {
+    const merged = [
+      ...history,
+      ...newData.filter(nd => !history.some(h => h.numeroDocumento === nd.numeroDocumento))
+    ];
+    setHistory(merged);
+    localStorage.setItem("dniHistory", JSON.stringify(merged));
   };
 
   return (
@@ -98,11 +109,24 @@ export default function Index() {
         <SearchForm q={q} onSubmit={handleSubmit} />
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2 mb-8">
         <ExportButtons data={history} fileName="busquedas_dni" />
+        <button
+          type="button"
+          onClick={() => setShowImport(true)}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          Importar
+        </button>
       </div>
 
-      <h2 className="text-lg font-medium mb-2">Historial de búsquedas</h2>
+      {showImport && (
+        <ImportModal
+          onClose={() => setShowImport(false)}
+          onImport={handleImport}
+        />
+      )}
+
       <HistoryTable history={history} />
     </main>
   );
