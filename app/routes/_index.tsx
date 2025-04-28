@@ -9,6 +9,7 @@ import SearchForm from "~/components/SearchForm";
 import HistoryTable from "~/components/HistoryTable";
 import Notification from "~/components/Notification";
 import { Messages } from "~/utils/messages";
+import ExportButtons from "~/components/ExportButtons";
 
 export async function loader({ request }: DataFunctionArgs) {
   const url = new URL(request.url);
@@ -93,7 +94,13 @@ export default function Index() {
         />
       )}
 
-      <SearchForm q={q} onSubmit={handleSubmit} />
+      <div className="flex justify-center">
+        <SearchForm q={q} onSubmit={handleSubmit} />
+      </div>
+
+      <div className="flex justify-end">
+        <ExportButtons data={history} fileName="busquedas_dni" />
+      </div>
 
       <h2 className="text-lg font-medium mb-2">Historial de búsquedas</h2>
       <HistoryTable history={history} />
