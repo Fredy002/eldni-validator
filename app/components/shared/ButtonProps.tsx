@@ -5,6 +5,7 @@ interface ButtonProps {
     color?: "blue" | "green" | "red" | "yellow" | "gray";
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
+    type?: "button" | "submit" | "reset";
 }
 
 export default function Button({
@@ -12,6 +13,7 @@ export default function Button({
     color = "red",
     onClick,
     disabled = false,
+    type = "button",
 }: ButtonProps) {
     const base = "px-4 py-2 rounded font-medium transition ";
     const styles = disabled
@@ -20,7 +22,7 @@ export default function Button({
 
     return (
         <button
-            type="button"
+            type={type}
             onClick={onClick}
             disabled={disabled}
             className={base + styles}
