@@ -1,5 +1,6 @@
 import { Form } from "@remix-run/react";
 import { useEffect, useState } from "react";
+import Button from "./shared/ButtonProps";
 
 interface Props {
     q?: string;
@@ -21,12 +22,14 @@ export default function SearchForm({ q, onSubmit }: Props) {
                 name="q"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ej: 12345678"
+                placeholder="Ingrese el DNI"
                 className="border px-3 py-2 rounded flex-1"
             />
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-                Buscar
-            </button>
+            <Button
+                label="Buscar"
+                color="blue"
+                type="submit"
+            />
         </Form>
     );
 }
