@@ -62,13 +62,15 @@ export default function HistoryTable({
                 </table>
             </div>
 
-            <Paginator
-                totalItems={totalItems}
-                itemsPerPage={localItemsPerPage}
-                itemsPerPageOptions={itemsPerPageOptions}
-                onPageChange={setCurrentPage}
-                onItemsPerPageChange={handleItemsPerPageChange}
-            />
+            <div className="flex justify-end gap-2 mb-8">
+                <Paginator
+                    totalItems={totalItems}
+                    itemsPerPage={localItemsPerPage}
+                    itemsPerPageOptions={itemsPerPageOptions}
+                    onPageChange={setCurrentPage}
+                    onItemsPerPageChange={handleItemsPerPageChange}
+                />
+            </div>
         </div>
     );
 }
