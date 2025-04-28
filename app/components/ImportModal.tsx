@@ -3,7 +3,7 @@ import { useState } from "react";
 import * as XLSX from "xlsx";
 import { FaTimes } from "react-icons/fa";
 import Notification from "~/components/shared/Notification";
-import HistoryTable from "~/components/HistoryTable";
+import HistoryTable from "~/components/shared/HistoryTable";
 import Button from "./shared/ButtonProps";
 
 interface Props {
