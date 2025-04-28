@@ -100,7 +100,7 @@ export default function Index() {
     },
     {
       label: "Limpiar",
-      color: "red" as const,
+      color: "yellow" as const,
       onClick: handleClear,
       disabled: history.length === 0,
     },
