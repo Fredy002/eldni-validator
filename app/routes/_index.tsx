@@ -11,6 +11,7 @@ import Notification from "~/components/shared/Notification";
 import { Messages } from "~/utils/messages";
 import ExportButtons from "~/components/ExportButtons";
 import ImportModal from "~/components/ImportModal";
+import Button from "~/components/shared/ButtonProps";
 
 export async function loader({ request }: DataFunctionArgs) {
   const url = new URL(request.url);
@@ -85,6 +86,26 @@ export default function Index() {
     localStorage.setItem("dniHistory", JSON.stringify(merged));
   };
 
+  const handleClear = () => {
+    localStorage.removeItem("dniHistory");
+    setHistory([]);
+  };
+
+  const buttons = [
+    {
+      label: "Importar",
+      color: "green" as const,
+      onClick: () => setShowImport(true),
+      disabled: false,
+    },
+    {
+      label: "Limpiar",
+      color: "red" as const,
+      onClick: handleClear,
+      disabled: history.length === 0,
+    },
+  ];
+
   return (
     <main className="p-6">
       <h1 className="text-xl font-semibold mb-4">🔍 Buscar por DNI</h1>
@@ -110,13 +131,16 @@ export default function Index() {
 
       <div className="flex justify-end gap-2 mb-8">
         <ExportButtons data={history} fileName="busquedas_dni" />
-        <button
-          type="button"
-          onClick={() => setShowImport(true)}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        >
-          Importar
-        </button>
+
+        {buttons.map(({ label, color, onClick, disabled }) => (
+          <Button
+            key={label}
+            label={label}
+            color={color}
+            onClick={onClick}
+            disabled={disabled}
+          />
+        ))}
       </div>
 
       {showImport && (
