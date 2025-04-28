@@ -4,6 +4,7 @@ import * as XLSX from "xlsx";
 import { FaTimes } from "react-icons/fa";
 import Notification from "~/components/shared/Notification";
 import HistoryTable from "~/components/HistoryTable";
+import Button from "./shared/ButtonProps";
 
 interface Props {
     onClose: () => void;
@@ -118,16 +119,14 @@ export default function ImportModal({ onClose, onImport }: Props) {
                         <div className="mb-4">
                             <HistoryTable history={importedData} />
                             <div className="mt-4 flex justify-end">
-                                <button
-                                    type="button"
+                                <Button
+                                    label="Realizar Búsqueda"
+                                    color="green"
                                     onClick={() => {
                                         onImport(importedData);
                                         onClose();
                                     }}
-                                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                                >
-                                    Agregar datos
-                                </button>
+                                />
                             </div>
                         </div>
                     )}
