@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 
 import { DniService } from "~/services/dniService";
 import type { Person } from "~/models/person";
-import SearchForm from "~/components/SearchForm";
 import HistoryTable from "~/components/shared/HistoryTable";
 import Notification from "~/components/shared/Notification";
 import { Messages } from "~/utils/messages";
-import ExportButtons from "~/components/ExportButtons";
 import ImportModal from "~/components/ImportModal";
 import Button from "~/components/shared/ButtonProps";
+import SearchForm from "~/components/shared/SearchForm";
+import ExportButtons from "~/components/shared/ExportButtons";
 
 interface Column<T> {
   header: string;

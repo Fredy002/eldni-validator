@@ -19,7 +19,7 @@ interface Column<T> {
 const columns: Column<Person>[] = [
     { header: "NOMBRES", accessor: "nombres" },
     { header: "APELLIDOS", accessor: "apellidoPaterno" },
-    { header: "DNI", accessor: "numeroDocumento" },
+    { header: "DOC. NACIONAL DE IDENTIDAD (DNI)", accessor: "numeroDocumento" },
 ];
 
 export default function ImportModal({ onClose, onImport }: Props) {
