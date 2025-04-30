@@ -81,6 +81,13 @@ export default function ImportModal({ onClose, onImport }: Props) {
         }
     };
 
+    const handleSearch = () => {
+        if (!importedData) return;
+        const documentos = importedData.map(p => p.numeroDocumento);
+        console.log(JSON.stringify(documentos));
+        onClose();
+    };
+
     return (
         <>
             {error && (
@@ -141,6 +148,7 @@ export default function ImportModal({ onClose, onImport }: Props) {
                                     onClick={() => {
                                         onImport(importedData);
                                         onClose();
+                                        handleSearch();
                                     }}
                                 />
                             </div>
