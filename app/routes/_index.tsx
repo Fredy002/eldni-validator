@@ -12,6 +12,7 @@ import ImportModal from "~/components/ImportModal";
 import Button from "~/components/shared/ButtonProps";
 import SearchForm from "~/components/shared/SearchForm";
 import ExportButtons from "~/components/shared/ExportButtons";
+import TabbedTables from "~/components/shared/TabbedTables";
 
 interface Column<T> {
   header: string;
@@ -74,6 +75,18 @@ export default function Index() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setClientError(null);
+      //TODO: hacer un componente confirm con opcion de si/no
+    if (importedData) {
+      const ok = window.confirm(
+        "¿Seguro que quieres volver a la búsqueda? Esto perderá tus datos importados."
+      );
+      if (!ok) {
+        e.preventDefault();
+        return;
+      }
+      setImportedData(null);
+    }
+
     const form = e.currentTarget;
     const v = (new FormData(form).get("q") || "").toString().trim();
     if (v && v.length !== 8) {
@@ -89,6 +102,7 @@ export default function Index() {
     ];
     setHistory(merged);
     localStorage.setItem("dniHistory", JSON.stringify(merged));
+    setImportedData(newData);
   };
 
   const handleClear = () => {
@@ -111,10 +125,56 @@ export default function Index() {
     },
   ];
 
+  const [importedData, setImportedData] = useState<Person[] | null>(null);
+
   const columns: Column<Person>[] = [
     { header: "NOMBRES", accessor: "nombres" },
     { header: "APELLIDOS", accessor: "apellidoPaterno" },
+    { header: "DOC. NACIONAL DE IDENTIDAD (DNI)", accessor: "numeroDocumento" },
+  ];
+
+
+  //TODO: implementar logica para mostrar datos correctos, datos incorrectos y datos no encontrados
+  const historyColumns: Column<Person>[] = [
+    { header: "NOMBRES1", accessor: "nombres" },
+    { header: "APELLIDOS", accessor: "apellidoPaterno" },
     { header: "DNI", accessor: "numeroDocumento" },
+  ];
+
+  const errorColumns: Column<Person>[] = [
+    { header: "NOMBRES2", accessor: "nombres" },
+    { header: "APELLIDOS", accessor: "apellidoPaterno" },
+    { header: "DNI", accessor: "numeroDocumento" },
+  ];
+
+  const summaryColumns: Column<Person>[] = [
+    { header: "NOMBRES3", accessor: "nombres" },
+    { header: "APELLIDOS", accessor: "apellidoPaterno" },
+    { header: "DNI", accessor: "numeroDocumento" },
+  ];
+
+  const tabsConfig = [
+    {
+      title: "Historial DNI",
+      data: history,
+      columns: historyColumns,
+      itemsPerPage: 20,
+      itemsPerPageOptions: [20, 50, 100],
+    },
+    {
+      title: "Historial DNI",
+      data: history,
+      columns: errorColumns,
+      itemsPerPage: 20,
+      itemsPerPageOptions: [20, 50, 100],
+    },
+    {
+      title: "Historial DNI",
+      data: history,
+      columns: summaryColumns,
+      itemsPerPage: 20,
+      itemsPerPageOptions: [20, 50, 100],
+    },
   ];
 
   return (
@@ -143,15 +203,17 @@ export default function Index() {
       <div className="flex justify-end gap-2 mb-8">
         <ExportButtons data={history} fileName="busquedas_dni" />
 
-        {buttons.map(({ label, color, onClick, disabled }) => (
-          <Button
-            key={label}
-            label={label}
-            color={color}
-            onClick={onClick}
-            disabled={disabled}
-          />
-        ))}
+        {buttons
+          .filter(({ label }) => !(importedData && label === "Limpiar"))
+          .map(({ label, color, onClick, disabled }) => (
+            <Button
+              key={label}
+              label={label}
+              color={color}
+              onClick={onClick}
+              disabled={disabled}
+            />
+          ))}
       </div>
 
       {showImport && (
@@ -161,12 +223,13 @@ export default function Index() {
         />
       )}
 
-      <HistoryTable
+      {importedData ? <TabbedTables tabs={tabsConfig} /> : <HistoryTable
         data={history}
         columns={columns}
         itemsPerPage={20}
         itemsPerPageOptions={[20, 50, 100]}
       />
+      }
     </main>
   );
 }
