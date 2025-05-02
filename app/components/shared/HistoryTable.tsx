@@ -3,7 +3,7 @@ import Paginator from './Paginator';
 
 interface Column<T> {
     header: string;
-    accessor: keyof T;
+    accessor: keyof T | ((item: T) => React.ReactNode);
 }
 
 interface HistoryTableProps<T> {
@@ -57,7 +57,7 @@ export default function HistoryTable<T extends object>({
                                 >
                                     {columns.map((col) => (
                                         <td key={String(col.accessor)} className="px-4 py-2 border">
-                                            {String(row[col.accessor] ?? '')}
+                                            {typeof col.accessor === 'function' ? col.accessor(row) : String(row[col.accessor] ?? '')}
                                         </td>
                                     ))}
                                 </tr>
