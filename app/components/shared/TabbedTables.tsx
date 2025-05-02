@@ -3,7 +3,7 @@ import HistoryTable from "./HistoryTable";
 
 interface Column<T> {
     header: string;
-    accessor: keyof T;
+    accessor: keyof T | ((item: T) => React.ReactNode);
 }
 
 interface Tab<T extends object> {
@@ -16,13 +16,15 @@ interface Tab<T extends object> {
 
 interface TabbedTablesProps<T extends object> {
     tabs: Tab<T>[];
+    loading?: boolean;
 }
 
-export default function TabbedTables<T extends object>({ tabs }: TabbedTablesProps<T>) {
+export default function TabbedTables<T extends object>({ tabs, loading }: TabbedTablesProps<T>) {
     const [activeIndex, setActiveIndex] = useState(0);
 
     return (
         <div>
+
             <div className="border-b border-gray-200 dark:border-gray-700">
                 <nav className="-mb-px flex space-x-4" aria-label="Tabs">
                     {tabs.map((tab, idx) => (
@@ -30,8 +32,8 @@ export default function TabbedTables<T extends object>({ tabs }: TabbedTablesPro
                             key={idx}
                             onClick={() => setActiveIndex(idx)}
                             className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm focus:outline-none ${idx === activeIndex
-                                    ? "border-indigo-500 text-indigo-600"
-                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                ? "border-indigo-500 text-indigo-600"
+                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                                 }`}
                         >
                             {tab.title}
@@ -39,20 +41,25 @@ export default function TabbedTables<T extends object>({ tabs }: TabbedTablesPro
                     ))}
                 </nav>
             </div>
-
-            <div className="mt-4">
-                <h2 className="text-xl font-semibold mb-2">
-                    {tabs[activeIndex].title}
-                </h2>
-                <HistoryTable<T>
-                    data={tabs[activeIndex].data}
-                    columns={tabs[activeIndex].columns}
-                    itemsPerPage={tabs[activeIndex].itemsPerPage ?? 20}
-                    itemsPerPageOptions={
-                        tabs[activeIndex].itemsPerPageOptions ?? [20, 50, 100]
-                    }
-                />
-            </div>
+            {loading ? (
+                <div className="text-center p-4 text-gray-500">
+                    Cargando datos...
+                </div>
+            ) : (
+                <div className="mt-4">
+                    <h2 className="text-xl font-semibold mb-2">
+                        {tabs[activeIndex].title}
+                    </h2>
+                    <HistoryTable<T>
+                        data={tabs[activeIndex].data}
+                        columns={tabs[activeIndex].columns}
+                        itemsPerPage={tabs[activeIndex].itemsPerPage ?? 20}
+                        itemsPerPageOptions={
+                            tabs[activeIndex].itemsPerPageOptions ?? [20, 50, 100]
+                        }
+                    />
+                </div>
+            )}
         </div>
     );
 }
