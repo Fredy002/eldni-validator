@@ -13,6 +13,7 @@ import SearchForm from "~/components/shared/SearchForm";
 import ExportButtons from "~/components/shared/ExportButtons";
 import TabbedTables from "~/components/shared/TabbedTables";
 import Button from "~/components/shared/Button";
+import ConfirmationDialog from "~/components/shared/ConfirmationDialog";
 
 interface Column<T> {
   header: string;
@@ -73,18 +74,24 @@ export default function Index() {
     }
   }, [persons, serverErrorState, history]);
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const confirmReturn = () => {
+    setImportedData(null);
+    setShowConfirm(false);
+  };
+
+  const cancelReturn = () => {
+    setShowConfirm(false);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setClientError(null);
-      //TODO: hacer un componente confirm con opcion de si/no
+
     if (importedData) {
-      const ok = window.confirm(
-        "¿Seguro que quieres volver a la búsqueda? Esto perderá tus datos importados."
-      );
-      if (!ok) {
-        e.preventDefault();
-        return;
-      }
-      setImportedData(null);
+      e.preventDefault();
+      setShowConfirm(true);
+      return;
     }
 
     const form = e.currentTarget;
@@ -228,8 +235,13 @@ export default function Index() {
         columns={columns}
         itemsPerPage={20}
         itemsPerPageOptions={[20, 50, 100]}
+      />}
+      <ConfirmationDialog
+        isOpen={showConfirm}
+        message="¿Seguro que quieres volver a la búsqueda? Esto perderá tus datos importados."
+        onConfirm={confirmReturn}
+        onCancel={cancelReturn}
       />
-      }
     </main>
   );
 }
