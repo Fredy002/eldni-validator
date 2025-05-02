@@ -1,6 +1,6 @@
 import { Form } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import Button from "./ButtonProps";
+import Button from "./Button";
 
 interface Props {
     q?: string;

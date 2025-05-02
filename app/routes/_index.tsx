@@ -9,10 +9,10 @@ import HistoryTable from "~/components/shared/HistoryTable";
 import Notification from "~/components/shared/Notification";
 import { Messages } from "~/utils/messages";
 import ImportModal from "~/components/ImportModal";
-import Button from "~/components/shared/ButtonProps";
 import SearchForm from "~/components/shared/SearchForm";
 import ExportButtons from "~/components/shared/ExportButtons";
 import TabbedTables from "~/components/shared/TabbedTables";
+import Button from "~/components/shared/Button";
 
 interface Column<T> {
   header: string;

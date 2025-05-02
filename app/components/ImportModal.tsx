@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import { FaTimes } from "react-icons/fa";
 import Notification from "~/components/shared/Notification";
 import HistoryTable from "~/components/shared/HistoryTable";
-import Button from "./shared/ButtonProps";
+import Button from "./shared/Button";
 
 interface Props {
     onClose: () => void;
