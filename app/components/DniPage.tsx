@@ -11,6 +11,7 @@ import Notification from "~/components/shared/Notification";
 import ConfirmationDialog from "~/components/shared/ConfirmationDialog";
 import Button from "~/components/shared/Button";
 import { useDniHistory } from "~/hooks/useDniHistory";
+import { Messages } from "~/utils/messages";
 
 interface LoaderData {
     persons: Person[];
@@ -34,9 +35,10 @@ export default function DniPage() {
     const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         setClientError(null);
         const v = (new FormData(e.currentTarget).get("q") || "").toString().trim();
-        if (v && v.length !== 8) {
+        if (!v) {
             e.preventDefault();
-            setClientError("Longitud inválida");
+            setClientError(Messages.EMPTY_DNI);
+            return;
         }
     };
 
@@ -78,17 +80,45 @@ export default function DniPage() {
         { title: "No Encontrados", data: validationResults.filter(r => r.status === 'not_found'), columns: notFoundColumns, itemsPerPage: 20 }
     ];
 
+    const [importedData] = useState<Person[] | null>(null);
+
+    const buttons = [
+        {
+            label: "Importar",
+            color: "green" as const,
+            onClick: () => setShowImport(true),
+            disabled: false,
+        },
+        {
+            label: "Limpiar",
+            color: "yellow" as const,
+            onClick: () => setShowConfirm(true),
+            disabled: history.length === 0,
+        },
+    ];
+
     return (
         <main className="p-6">
             <h1 className="text-xl font-semibold mb-4">🔍 Buscar por DNI</h1>
             {clientError && <Notification message={clientError} type="error" onClose={() => setClientError(null)} />}
             {error && <Notification message={error} type="error" onClose={() => { }} />}
 
-            <SearchForm q={q} onSubmit={handleSearchSubmit} />
+            <div className="flex justify-center">
+                <SearchForm q={q} onSubmit={handleSearchSubmit} />
+            </div>
 
-            <div className="flex gap-2 mb-8">
-                <Button label="Importar" color="green" onClick={() => setShowImport(true)} />
-                <Button label="Limpiar" color="yellow" onClick={() => setShowConfirm(true)} disabled={history.length === 0} />
+            <div className="flex justify-end gap-2 mb-8">
+                {buttons
+                    .filter(({ label }) => !(importedData && label === "Limpiar"))
+                    .map(({ label, color, onClick, disabled }) => (
+                        <Button
+                            key={label}
+                            label={label}
+                            color={color}
+                            onClick={onClick}
+                            disabled={disabled}
+                        />
+                    ))}
             </div>
 
             {showImport && <ImportModal onClose={() => setShowImport(false)} onImport={handleImport} />}
