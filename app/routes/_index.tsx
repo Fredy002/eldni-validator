@@ -10,7 +10,6 @@ import Notification from "~/components/shared/Notification";
 import { Messages } from "~/utils/messages";
 import ImportModal from "~/components/ImportModal";
 import SearchForm from "~/components/shared/SearchForm";
-import ExportButtons from "~/components/shared/ExportButtons";
 import TabbedTables from "~/components/shared/TabbedTables";
 import Button from "~/components/shared/Button";
 import ConfirmationDialog from "~/components/shared/ConfirmationDialog";
@@ -77,6 +76,7 @@ export default function Index() {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const confirmReturn = () => {
+    handleClear();
     setImportedData(null);
     setShowConfirm(false);
   };
@@ -208,7 +208,6 @@ export default function Index() {
       </div>
 
       <div className="flex justify-end gap-2 mb-8">
-        <ExportButtons data={history} fileName="busquedas_dni" />
 
         {buttons
           .filter(({ label }) => !(importedData && label === "Limpiar"))
