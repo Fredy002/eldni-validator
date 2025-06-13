@@ -1,3 +1,4 @@
+import { DniService } from "~/services/dniService";
 import { Person } from "./person";
 
 export interface DniValidationResult {
@@ -14,19 +15,20 @@ export const comparePersons = (imported: Person, actual: Person): boolean => {
     );
 };
 
-// TODO: REVISAR LOS ERRORES, ADEMAS VERIFICAR SI ESTA FUNCIONAL O NO /API/RENIEC
+// Utiliza DniService para consultar el API y clasifica el resultado
 
 export async function validateImportedData(person: Person): Promise<DniValidationResult> {
     try {
-        const resp = await fetch(`/api/reniec?numero=${person.numeroDocumento}`);
-
-        const result = await resp.json();
-        if (resp.ok && result?.nombres) {
-            return { status: 'correct', imported: person, actual: result };
-        } else {
-            return { status: result?.error ? 'not_found' : 'incorrect', imported: person, actual: result };
+        const result = await new DniService().fetchByNumero(person.numeroDocumento);
+        if (result?.nombres) {
+            return { status: comparePersons(person, result) ? 'correct' : 'incorrect', imported: person, actual: result };
         }
-    } catch {
+        // If result exists but does not have nombres, treat as not found
         return { status: 'not_found', imported: person };
+    } catch (err: unknown) {
+        if (err instanceof Error && err.message.includes('404')) {
+            return { status: 'not_found', imported: person };
+        }
+        return { status: 'incorrect', imported: person };
     }
 }
